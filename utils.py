@@ -90,9 +90,9 @@ async def save_file(media):
         try:
             await file.commit()
         except DuplicateKeyError:
-            logger.warning(media.file_name + " is already saved in database")
+            logger.warning(f'{media.file_name} is already saved in database')
         else:
-            logger.info(media.file_name + " is saved in database")
+            logger.info(f'{media.file_name} is saved in database')
 
 
 async def get_search_results(query, file_type=None, max_results=10, offset=0):
@@ -102,7 +102,7 @@ async def get_search_results(query, file_type=None, max_results=10, offset=0):
     if not query:
         raw_pattern = '.'
     elif ' ' not in query:
-        raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
+        raw_pattern = f'(\\b|[\\.\\+\\-_]){query}(\\b|[\\.\\+\\-_])'
     else:
         raw_pattern = query.replace(' ', r'.*[\s\.\+\-_]')
 
@@ -141,7 +141,7 @@ async def get_filter_results(query):
     if not query:
         raw_pattern = '.'
     elif ' ' not in query:
-        raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
+        raw_pattern = f'(\\b|[\\.\\+\\-_]){query}(\\b|[\\.\\+\\-_])'
     else:
         raw_pattern = query.replace(' ', r'.*[\s\.\+\-_]')
     try:
@@ -170,7 +170,7 @@ async def is_subscribed(bot, query):
     except Exception as e:
         logger.exception(e)
     else:
-        if not user.status == 'kicked':
+        if user.status != 'kicked':
             return True
 
     return False
@@ -213,7 +213,6 @@ async def get_poster(movie):
                 await get_all(a.get("Search"))
         except Exception as e:
             logger.exception(e)
-            pass
     return poster
 
 
